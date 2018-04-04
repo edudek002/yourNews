@@ -1,0 +1,31 @@
+{
+  "name": "yournews",
+  "version": "1.0.0",
+  "main": "server.js",
+  "dependencies": {
+    "bluebird": "^3.5.1",
+    "body-parser": "^1.18.2",
+    "cheerio": "^1.0.0-rc.2",
+    "express": "^4.16.3",
+    "express-handlebars": "^3.0.0",
+    "mongoose": "^5.0.12",
+    "morgan": "^1.9.0",
+    "request": "^2.85.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/edudek002/yourNews.git"
+  },
+  "author": "ED",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/edudek002/yourNews/issues"
+  },
+  "homepage": "https://github.com/edudek002/yourNews#readme",
+  "description": ""
+}
