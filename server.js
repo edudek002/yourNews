@@ -12,6 +12,15 @@ var Promise = require("bluebird");
 
 mongoose.Promise = Promise;
 
+// If deployed, use the deployed database. Otherwise use the local mongoHeadlines database
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/yourNews";
+
+// Set mongoose to leverage built in JavaScript ES6 Promises
+// Connect to the Mongo DB
+
+mongoose.connect(MONGODB_URI);
+
+
 var PORT = process.env.PORT || 3000;
 
 // Initialize Express
@@ -33,12 +42,6 @@ app.set("view engine", "handlebars");
 
 //Routes
 require("./controllers/fetch.js")(app);
-
-// Connect to the Mongo DB
-
-mongoose.connect("mongodb://localhost/yourNews", {
-  //useMongoClient: true
-});
 
 // Show Mongoose errors
 mongoose.connection.on('error', function(err) {
