@@ -1,0 +1,48 @@
+<div id="wrapper">
+  	<img src="./assets/img/People_Magazine_Logo.png" alt="People Logo" width="100%">
+
+  	<div>
+	  	<div>
+	  	<form action="/scrape" method="GET">
+	      <button type="submit" id="refreshed">Scrape For Newest Articles</button>
+	    </form>
+
+	    </div>
+
+	    <div>
+	    <a href="/saved"><button id="saved">Saved Articles</button></a>
+
+	    </div>
+	<div>
+	<br>
+  
+  	<!--<div id="notes"></div>-->
+
+
+	{{#each articles}}
+	<div class="articles" id={{this._id}}>
+		<div>
+			<h2><a class="headline" href="{{this.URL}}" target="_blank">{{this.headline}}</a>
+			</h2>
+		</div>
+		<div>
+			
+			<form action="/save/{{this._id}}" method="POST">
+			<button type="submit" class="position" value="{{this.position}}">{{this.position}}</button>
+
+			{{#if this.note}}
+			<button type="button" class="message-added" value="{{this._id}}">Edit Note</button>
+			{{/if}}
+
+			{{#unless this.note}}
+			<button type="button" class="message-added" value="{{this._id}}">Add A Note</button>
+			{{/unless}}
+			</form>
+		
+			<img class="media" src="{{this.image}}">
+			
+		</div>
+	</div>
+	{{/each}}
+
+</div>  
