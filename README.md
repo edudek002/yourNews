@@ -1,4 +1,4 @@
-# The New York Time Scraper
+# People Magazine Scraper
 
 ### Overview
 
