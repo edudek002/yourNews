@@ -6,7 +6,7 @@
 
 You can check this app using heroku
 
-https:
+https://fathomless-shore-48626.herokuapp.com/
 
 ### Dependencies
 
