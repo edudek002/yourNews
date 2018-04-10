@@ -80,7 +80,7 @@ module.exports = function(app) {
           });
           //console.log(db.Headline.create)
       });
-      res.send("Scrape Complete. Please type: http://localhost:3000 to get to the main page.");
+      res.send("Scrape Complete. Please click the back button to get to the main page.");
       console.log("Scrape Complete.");
       //res.redirect("/");  
     });
@@ -129,7 +129,7 @@ module.exports = function(app) {
   app.get("/saved", function(req, res) {
     db.Headline.find({issaved: true}, null, function(err, data) {
       if(data.length === 0) {
-        res.render("info", {message: "No articles saved."});
+        res.render("info", {message: "No articles saved yet!"});
       }
       else {
         res.render("saved", {saved: data});
