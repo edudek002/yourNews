@@ -21,10 +21,40 @@ module.exports = function(app) {
   app.get("/scrape", function(req, res) {
     // First, we grab the body of the html with request
     request("http://people.com/news/", function(error, response, html) {
-      var $ = cheerio.load(html);      
+      var $ = cheerio.load(html); 
+
       $("article").each(function(i, element) {
        // Save an empty result object
         var result = {};
+
+        //!!!!!!Peoples Magazine changes their HTML every day. Try the two solutions below:
+
+
+        // ===========DAY 1===============
+
+
+        // Add the text and href of every link, and save them as properties of the result object
+        result.headline = $(this)
+          .children("div.media-body")
+          .children("div.headline")
+          .children("a")
+          .text();
+        result.URL = $(this)
+          .children("div.media-body")
+          .children("div.headline")
+          .children("a")
+          .attr("href");
+        result.image = $(this)
+          .children("a.media-img")
+          .children("div.lazy-image")
+          .children("div.inner-container")
+          .children("img")
+          .attr("src");
+          
+
+        // ===========DAY2=================
+
+        /*
 
         // Add the text and href of every link, and save them as properties of the result object
         result.headline = $(this)
@@ -35,7 +65,7 @@ module.exports = function(app) {
           .attr("href");
         result.image = $(this)
           .children("a img")
-          .attr("href");
+          .attr("href");*/
         
         // Create a new Headline using the `result` object built from scraping
         db.Headline.create(result)

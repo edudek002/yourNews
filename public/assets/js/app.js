@@ -1,4 +1,4 @@
-$(document).ready(function(){
+
 
   $(document).on("click", ".message-added", showMessage);
   $(document).on("click", "#add-message", addMessage);
@@ -46,5 +46,5 @@ $(document).ready(function(){
       window.location.href = "/saved";
     });
   }
-});
+
   
