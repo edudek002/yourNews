@@ -7,6 +7,7 @@ var Headline = require('../models/Headline.js');
 module.exports = function(app) {
   
   app.get("/", function(req, res) {
+    db.Headline.remove({});
     db.Headline.find({}, null, function(err, data) {
       if(data.length === 0) {
         res.render("info", {message: "There are no articles. Please type: http://localhost:3000/scrape to get articles."});
@@ -85,12 +86,44 @@ module.exports = function(app) {
     });
   });
 
+  // Route for grabbing a specific Article by id, populate it with it's note
+  app.get("/note/:id", function(req, res) {
+    
+    db.Headline.findById(req.params.id)
+    .populate("note")
+    .exec(function(err, data) {
+      res.render("home", {articles: data});
+    })
+  })
 
-  app.get("/:id", function(req, res) {
+
+  // Route for saving/updating an Article's associated Note
+  app.post("/note/:id", function(req, res) {
+    // Create a new note and pass the req.body to the entry
+    db.Note.create(req.body)
+      .then(function(dbNote) {
+        // If a Note was created successfully, find one Article with an `_id` equal to `req.params.id`. Update the Article to be associated with the new Note
+        // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
+        // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
+        return db.Headline.findOneAndUpdate({ _id: req.params.id }, { note: dbNote._id }, { new: true });
+      })
+      .then(function(dbHeadline) {
+        // If we were able to successfully update an Article, send it back to the client
+        res.json(dbHeadline);
+        res.render("saved", {articles: data});
+      })
+      .catch(function(err) {
+        // If an error occurred, send it to the client
+        res.json(err);
+      });
+  });
+  
+
+  /*app.get("/:id", function(req, res) {
     db.Headline.findById(req.params.id, function(err, data) {
       res.json(data);
     })
-  });
+  });*/
 
 
   app.get("/saved", function(req, res) {
@@ -118,25 +151,5 @@ module.exports = function(app) {
       }
     });
   });
-
-  app.post("/note/:id", function(req, res) {
-    var note = new Note(req.body);
-    note.save(function(err, doc) {
-      if (err) throw err;
-      db.Headline.findByIdAndUpdate(req.params.id, {$set: {"note": doc._id}}, {new: true}, function(err, newdoc) {
-        if (err) throw err;
-        else {
-          res.send(newdoc);
-        }
-      });
-    });
-  });
-
-  app.get("/note/:id", function(req, res) {
-    var id = req.params.id;
-    db.Headline.findById(id).populate("note").exec(function(err, data) {
-      res.send(data.note);
-    })
-  })
 
 } 
