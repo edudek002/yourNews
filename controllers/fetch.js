@@ -7,7 +7,20 @@ var Headline = require('../models/Headline.js');
 module.exports = function(app) {
   
   app.get("/", function(req, res) {
-    db.Headline.remove({});
+
+    /*db.Headline.remove({}).then(function(err, data) 
+      
+    {console.log("Inside callback");
+      db.Headline.find({}, null, function(err, data) {
+        if(data.length === 0) {
+          res.render("info", {message: "There are no articles. Please type: http://localhost:3000/scrape to get articles."});
+        }
+        else{  
+          res.render("home", {articles: data});
+        }
+      });
+    });*/
+
     db.Headline.find({}, null, function(err, data) {
       if(data.length === 0) {
         res.render("info", {message: "There are no articles. Please type: http://localhost:3000/scrape to get articles."});
@@ -16,11 +29,13 @@ module.exports = function(app) {
         res.render("home", {articles: data});
       }
     });
+
   });
 
   // A GET route for scraping the website
   app.get("/scrape", function(req, res) {
     // First, we grab the body of the html with request
+    db.Headline.remove({});
     request("http://people.com/news/", function(error, response, html) {
       var $ = cheerio.load(html); 
 
@@ -28,7 +43,7 @@ module.exports = function(app) {
        // Save an empty result object
         var result = {};
 
-        //!!!!!!Peoples Magazine changes their HTML every day. Try the two solutions below:
+        //!!!!!!Peoples Magazine changes their HTML often. Try the two solutions below:
 
 
         // ===========DAY 1===============
@@ -51,6 +66,7 @@ module.exports = function(app) {
           .children("div.inner-container")
           .children("img")
           .attr("src");
+          console.log("result is " + JSON.stringify(result));
           
 
         // ===========DAY2=================
@@ -110,7 +126,7 @@ module.exports = function(app) {
       .then(function(dbHeadline) {
         // If we were able to successfully update an Article, send it back to the client
         res.json(dbHeadline);
-        res.render("saved", {articles: data});
+        res.render("home", {articles: data});
       })
       .catch(function(err) {
         // If an error occurred, send it to the client

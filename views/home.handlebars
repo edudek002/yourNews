@@ -26,20 +26,29 @@
 			</h2>
 		</div>
 		<div>
-			
+			<!--===SAVE ARTICLE====-->
+
 			<form action="/save/{{this._id}}" method="POST">
 			<button type="submit" class="position" value="{{this.position}}">{{this.position}}</button>
 
+
+			<!--===SAVE NOTE=======-->
+
 			{{#if this.note}}
-			<button type="button" class="message-added" value="{{this._id}}">Edit Note</button>
+			<button type="button" id="notes" class="message-added" value="{{this._id}}">Edit Note</button>
 			{{/if}}
 
 			{{#unless this.note}}
-			<button type="button" class="message-added" value="{{this._id}}">Add A Note</button>
+			<button type="button" class="message-added" id="notes" value="{{this._id}}">Add A Note</button>
 			{{/unless}}
+
 			</form>
+			
+
+			<!--===PICTURE=======-->
 		
 			<img class="media" src="{{this.image}}">
+			
 			
 		</div>
 	</div>
