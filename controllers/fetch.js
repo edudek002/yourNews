@@ -96,9 +96,8 @@ module.exports = function(app) {
           });
           //console.log(db.Headline.create)
       });
-      res.send("Scrape Complete. Please click the back button to get to the main page.");
-      console.log("Scrape Complete.");
-      //res.redirect("/");  
+      res.send("Scrape Complete. Please click the Back button to get to the main page.");
+      console.log("Scrape Complete.");  
     });
   });
 
@@ -108,7 +107,13 @@ module.exports = function(app) {
     db.Headline.findById(req.params.id)
     .populate("note")
     .exec(function(err, data) {
-      res.render("home", {articles: data});
+
+      if(data.length === 0) {
+        res.render("info", {message: "Please write a note for this article."});
+      }
+      else{  
+        res.render("home", {articles: data});
+      }
     })
   })
 
@@ -145,7 +150,7 @@ module.exports = function(app) {
   app.get("/saved", function(req, res) {
     db.Headline.find({issaved: true}, null, function(err, data) {
       if(data.length === 0) {
-        res.render("info", {message: "No articles saved yet!"});
+        res.render("info", {message: "No articles saved yet! Click the Back button to get to the main page."});
       }
       else {
         res.render("saved", {saved: data});
@@ -161,7 +166,7 @@ module.exports = function(app) {
         });
       }
       else {
-        db.Headline.findByIdAndUpdate(req.params.id, {$set: {issaved: true, position: "Saved"}}, {new: true}, function(err, data) {
+        db.Headline.findByIdAndUpdate(req.params.id, {$set: {issaved: true, position: "Saved. Click to Unsave."}}, {new: true}, function(err, data) {
           res.redirect("/saved");
         });
       }

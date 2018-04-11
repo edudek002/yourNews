@@ -26,13 +26,13 @@
 			</h2>
 		</div>
 		<div>
-			<!--===SAVE ARTICLE====-->
+			<!--===SAVE AN ARTICLE====-->
 
 			<form action="/save/{{this._id}}" method="POST">
 			<button type="submit" class="position" value="{{this.position}}">{{this.position}}</button>
 
 
-			<!--===SAVE NOTE=======-->
+			<!--===SAVE A NOTE=======-->
 
 			{{#if this.note}}
 			<button type="button" id="notes" class="message-added" value="{{this._id}}">Edit Note</button>
@@ -54,4 +54,9 @@
 	</div>
 	{{/each}}
 
-</div>  
+</div> 
+
+
+
+
+ 
