@@ -8,22 +8,17 @@ module.exports = function(app) {
   
   app.get("/", function(req, res) {
 
-    /*db.Headline.remove({}).then(function(err, data) 
+    //REMOVE FILES FROM DATA
+    /*
+    db.Headline.remove({}).then(function(err, data) 
       
     {console.log("Inside callback");
-      db.Headline.find({}, null, function(err, data) {
-        if(data.length === 0) {
-          res.render("info", {message: "There are no articles. Please type: http://localhost:3000/scrape to get articles."});
-        }
-        else{  
-          res.render("home", {articles: data});
-        }
-      });
-    });*/
-
+      
+    });
+    */
     db.Headline.find({}, null, function(err, data) {
       if(data.length === 0) {
-        res.render("info", {message: "There are no articles. Please type: http://localhost:3000/scrape to get articles."});
+        res.render("info", {message: "There are no articles. Please type: http://localhost:3000/scrape to get articles, then press Back button."});
       }
       else{  
         res.render("home", {articles: data});
@@ -43,19 +38,16 @@ module.exports = function(app) {
        // Save an empty result object
         var result = {};
 
-        //!!!!!!Peoples Magazine changes their HTML often. Try the two solutions below:
-
-
+        //!!!Peoples Magazine changes their HTML often. Try the two solutions below:
         // ===========DAY 1===============
 
 
-        // Add the text and href of every link, and save them as properties of the result object
         result.headline = $(this)
           .children("div.media-body")
           .children("div.headline")
           .children("a")
           .text();
-        result.URL = $(this)
+        result.URL = "http://people.com" + $(this)
           .children("div.media-body")
           .children("div.headline")
           .children("a")
@@ -66,13 +58,12 @@ module.exports = function(app) {
           .children("div.inner-container")
           .children("img")
           .attr("src");
-          console.log("result is " + JSON.stringify(result));
+
+          console.log(" JSON result is " + JSON.stringify(result));
           
 
         // ===========DAY2=================
-
         /*
-
         // Add the text and href of every link, and save them as properties of the result object
         result.headline = $(this)
           .children("h3 a")
@@ -96,7 +87,7 @@ module.exports = function(app) {
           });
           //console.log(db.Headline.create)
       });
-      res.send("Scrape Complete. Please click the Back button to get to the main page.");
+      res.render("info", {message: "Scrape Complete. Please click the Back button to get to the main page."});
       console.log("Scrape Complete.");  
     });
   });
