@@ -41,7 +41,8 @@
     font-size: 14px;
     width: 60px;
     height: 120px;
-    background-color: #99b3ff;
+    color: white;
+    background-color: #002699;
     border: 3px solid #002699;
   }
 
@@ -66,7 +67,7 @@
   }
 
   .media {
-    width: 120px;
+    
     height: 120px;
     border: 3px solid #002699;
   }

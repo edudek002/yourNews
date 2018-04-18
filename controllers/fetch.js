@@ -1,4 +1,5 @@
 var db = require("../models");
+//var app = require('express')()
 var request = require("request");
 var cheerio = require("cheerio");
 var Note = require('../models/Note.js');
@@ -19,6 +20,7 @@ module.exports = function(app) {
     db.Headline.find({}, null, function(err, data) {
       if(data.length === 0) {
         res.render("info", {message: "There are no articles. Please type: http://localhost:3000/scrape to get articles, then press Back button."});
+        res.redirect("/scrape");
       }
       else{  
         res.render("home", {articles: data});
@@ -27,7 +29,8 @@ module.exports = function(app) {
 
   });
 
-  // A GET route for scraping the website
+
+   // A GET route for scraping the website
   app.get("/scrape", function(req, res) {
     // First, we grab the body of the html with request
     db.Headline.remove({});
@@ -38,9 +41,10 @@ module.exports = function(app) {
        // Save an empty result object
         var result = {};
 
+        var urls = $('article').children('a.media-img').children('div.lazy-image').get().map(article => article.attribs['data-src']);
+
         //!!!Peoples Magazine changes their HTML often. Try the two solutions below:
         // ===========DAY 1===============
-
 
         result.headline = $(this)
           .children("div.media-body")
@@ -52,29 +56,10 @@ module.exports = function(app) {
           .children("div.headline")
           .children("a")
           .attr("href");
-        result.image = $(this)
-          .children("a.media-img")
-          .children("div.lazy-image")
-          .children("div.inner-container")
-          .children("img")
-          .attr("src");
+        result.image = urls[i];
 
-          console.log(" JSON result is " + JSON.stringify(result));
+        //console.log(" JSON result is " + JSON.stringify(result));
           
-
-        // ===========DAY2=================
-        /*
-        // Add the text and href of every link, and save them as properties of the result object
-        result.headline = $(this)
-          .children("h3 a")
-          .text();
-        result.URL = $(this)
-          .children("h3 a")
-          .attr("href");
-        result.image = $(this)
-          .children("a img")
-          .attr("href");*/
-        
         // Create a new Headline using the `result` object built from scraping
         db.Headline.create(result)
           .then(function(dbHeadline) {
@@ -85,12 +70,13 @@ module.exports = function(app) {
             // If an error occurred, send it to the client
             return res.json(err);
           });
-          //console.log(db.Headline.create)
+        
       });
       res.render("info", {message: "Scrape Complete. Please click the Back button to get to the main page."});
       console.log("Scrape Complete.");  
     });
   });
+
 
   // Route for grabbing a specific Article by id, populate it with it's note
   app.get("/note/:id", function(req, res) {
